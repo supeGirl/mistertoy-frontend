@@ -8,7 +8,6 @@ import { ShoppingCart } from './ShoppingCart.jsx'
 export function AppFooter() {
     const dispatch = useDispatch()
     const isCartShown = useSelector(storeState => storeState.toyModule.isCartShown);
-    const count = useSelector(storeState => storeState.userModule.count);
     const toysLength = useSelector(storeState => storeState.toyModule.toys.length);
     const shoppingCartLength = useSelector(storeState => storeState.toyModule.shoppingCart.length);
     
@@ -20,7 +19,7 @@ export function AppFooter() {
                 Currently {toysLength} toys in the shop
             </h5>
             <p>
-                Coffeerights to all - Count: {count}
+                Coffeerights to Keren Vasserman
             </p>
             <h5>
                 <span>{shoppingCartLength}</span> Products in your Cart

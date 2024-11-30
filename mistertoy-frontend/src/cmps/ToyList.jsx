@@ -1,6 +1,7 @@
 import { ToyPreview } from "./ToyPreview.jsx"
 
 export function ToyList({ toys, onRemoveToy, onEditToy, addToCart }) {
+    
     return (
         <ul className="toy-list">
             {toys.map(toy =>

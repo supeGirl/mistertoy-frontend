@@ -6,7 +6,8 @@ export const utilService = {
     saveToStorage,
     animateCSS,
     debounce,
-    getRandomSubarray
+    getRandomSubarray,
+    makeToyName
 }
 
 function makeId(length = 6) {
@@ -29,6 +30,24 @@ function makeLorem(size = 100) {
     }
     return txt
 }
+
+function makeToyName(size = 3) {
+    const toyWords = [
+      'Toy', 'Robot', 'Doll', 'Car', 'Spaceship', 'Action', 'Figure', 'Bear', 'Block', 'Puzzle', 
+      'Train', 'Race', 'Dinosaur', 'Ball', 'Bicycle', 'Drone', 'Action', 'Hero', 'Lego', 'Play', 
+      'Robot', 'Animal', 'Super', 'Jet', 'Plane', 'Monster', 'Adventure', 'Ocean', 'Hero', 'Robot', 
+      'Rocket', 'Knight', 'Princess', 'Castle', 'Game', 'Balloon', 'Fighter', 'Champion', 'Turbo', 
+      'Builder', 'Explorer'
+    ];
+  
+    let toyName = '';
+    while (size > 0) {
+      size--;
+      toyName += toyWords[Math.floor(Math.random() * toyWords.length)] + ' ';
+    }
+  
+    return toyName.trim();
+  }
 
 function getRandomIntInclusive(min, max) {
     min = Math.ceil(min)
