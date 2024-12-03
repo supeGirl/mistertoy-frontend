@@ -1,14 +1,21 @@
 .toy-preview {
-    text-align: center;
-    padding: 0.3em;
-    display: flex;
-    flex-direction: column;
+  text-align: center;
+  padding: 0.3em;
+  display: flex;
+  flex-direction: column;
 }
-.toy-preview h4{
-    text-transform: capitalize;
-    color: black;
+.toy-preview h4 {
+  text-transform: capitalize;
+  color: black;
 }
 
 .toy-preview img {
-    max-width: 100px;
+  max-width: 100px;
+}
+
+.instock {
+  color: green;
+}
+.not-instock {
+  color: red;
 }

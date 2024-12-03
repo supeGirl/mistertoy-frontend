@@ -3,6 +3,8 @@ import {utilService} from './util.service.js'
 import {userService} from './user.service.local.js'
 
 const STORAGE_KEY = 'toyDB'
+const PAGE_SIZE = 5
+const labels = ['On wheels', 'Box game', 'Art', 'Baby', 'Doll', 'Puzzle', 'Outdoor', 'Battery Powered']
 
 _createToys()
 
@@ -14,30 +16,43 @@ export const toyService = {
   getEmptyToy,
   getDefaultFilter,
   getRandomToy,
+  getToyLabels,
 }
 
 function query(filterBy = {}) {
-  return storageService.query(STORAGE_KEY).then((toys) => {
+  return storageService.query(STORAGE_KEY).then((filteredToys) => {
+    // console.log('filterBy', filterBy)
+
     // Default filter values
     if (!filterBy.txt) filterBy.txt = ''
     if (!filterBy.maxPrice) filterBy.maxPrice = Infinity
 
-    const regExp = new RegExp(filterBy.txt, 'i')
+    if (filterBy.txt) {
+      const regExp = new RegExp(filterBy.txt, 'i')
+      filteredToys = filteredToys.filter((toy) => regExp.test(toy.name))
+    }
+    if (filterBy.inStock) {
+      filteredToys = filteredToys.filter((toy) => toy.inStock === JSON.parse(filterBy.inStock))
+    }
+    if (filterBy.labels && filterBy.labels.length) {
+      filteredToys = filteredToys.filter((toy) => filterBy.labels.some((label) => toy.labels.includes(label)))
+    }
 
-    // Filter toys by name and price
-    const filteredToys = toys.filter((toy) => {
-      return regExp.test(toy.name) && toy.price <= filterBy.maxPrice
-    })
-
-    // Sort the filtered toys based on the selected sort criteria
-    if (filterBy.sortBy) {
-      if (filterBy.sortBy === 'name') {
-        filteredToys.sort((a, b) => a.name.localeCompare(b.name))
-      } else if (filterBy.sortBy === 'price') {
-        filteredToys.sort((a, b) => a.price - b.price)
-      } else if (filterBy.sortBy === 'createdAt') {
-        filteredToys.sort((a, b) => a.createdAt - b.createdAt)
-      }
+    const {sortBy} = filterBy
+    if (sortBy.type) {
+      filteredToys.sort((t1, t2) => {
+        const sortDirection = sortBy.desc ? -1 : 1
+        if (sortBy.type === 'name') {
+          return t1.name.localeCompare(t2.name) * sortDirection
+        } else if (sortBy.type === 'price' || sortBy.type === 'createdAt') {
+          return (t1[sortBy.type] - t2[sortBy.type]) * sortDirection
+        }
+      })
+    }
+    const {pageIdx} = filterBy
+    if (pageIdx !== undefined) {
+      let startIdx = +pageIdx * PAGE_SIZE
+      filteredToys = filteredToys.slice(startIdx, startIdx + PAGE_SIZE)
     }
 
     return filteredToys
@@ -66,16 +81,29 @@ function getEmptyToy() {
   return {
     name: '',
     price: '',
-    labels: [],
-    inStock: true,
+    labels: utilService.getRandomSubarray(labels, utilService.getRandomIntInclusive(1, 3)),
   }
 }
 
 function getDefaultFilter() {
-  return {txt: '', maxPrice: '', sortBy: ''}
+  return {
+    txt: '',
+    inStock: null,
+    labels: [],
+    pageIdx: 0,
+    sortBy: {
+      type: '',
+      desc: 1,
+    },
+  }
 }
+
 function getRandomToy() {
   return _createToy()
+}
+
+function getToyLabels() {
+  return [...labels]
 }
 
 function _createToys() {
@@ -93,7 +121,7 @@ function _createToys() {
 }
 
 function _createToy() {
-  const labels = ['On wheels', 'Box game', 'Art', 'Baby', 'Doll', 'Puzzle', 'Outdoor', 'Battery Powered']
+  const labels = getToyLabels()
 
   const toy = getEmptyToy()
   toy.name = utilService.makeToyName(2) // Generate a random name
