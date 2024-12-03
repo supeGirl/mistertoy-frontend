@@ -8,7 +8,7 @@ import { ToyList } from '../cmps/ToyList.jsx'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect } from 'react'
 import { Link } from 'react-router-dom'
-import { toyService } from '../services/toy.service.local.js'
+import { toyService } from '../services/toy.service.js'
 
 export function ToyIndex() {
 

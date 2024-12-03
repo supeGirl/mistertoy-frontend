@@ -1,6 +1,6 @@
 import {useEffect, useRef, useState} from 'react'
 import {utilService} from '../services/util.service.js'
-import {toyService} from '../services/toy.service.local.js'
+import {toyService} from '../services/toy.service.js'
 
 export function ToyFilter({filterBy, onSetFilter}) {
   const [filterByToEdit, setFilterByToEdit] = useState({...filterBy})
