@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
 import { useNavigate } from "react-router"
-import { toyService } from "../services/toy.service.local"
+import { toyService } from "../services/toy.service.js"
 
 export function ToyDetails() {
     const [toy, setToy] = useState(null)

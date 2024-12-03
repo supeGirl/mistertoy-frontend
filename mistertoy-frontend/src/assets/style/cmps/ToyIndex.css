@@ -1,3 +1,5 @@
 .add-btn {
     margin: 0.6em ;
+    display: flex;
+    justify-content: center;
 }

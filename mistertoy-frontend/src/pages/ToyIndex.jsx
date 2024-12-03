@@ -74,10 +74,9 @@ export function ToyIndex() {
 
   return (
     <div>
-      <h3>Toys App</h3>
       <main>
-        <Link to="/toy/edit">Add Toy</Link>
         <ToyFilter filterBy={filterBy} onSetFilter={onSetFilter} />
+        <Link to="/toy/edit"><span className="add-btn">Add Toy</span></Link>
         {!isLoading ? (
           <ToyList toys={toys} onRemoveToy={onRemoveToy} onEditToy={onEditToy} addToCart={addToCart} />
         ) : (
