@@ -1,16 +1,12 @@
-import {useEffect, useRef, useState} from 'react'
+import {useRef} from 'react'
 
-
+// Formik
+import {Formik, Form, Field} from 'formik'
+import {TextField, Button, MenuItem, Select, Chip, InputLabel, FormControl, OutlinedInput} from '@mui/material'
+import * as Yup from 'yup'
 
 // UI
 import {useTheme} from '@mui/material/styles'
-import Box from '@mui/material/Box'
-import OutlinedInput from '@mui/material/OutlinedInput'
-import InputLabel from '@mui/material/InputLabel'
-import MenuItem from '@mui/material/MenuItem'
-import FormControl from '@mui/material/FormControl'
-import Select from '@mui/material/Select'
-import Chip from '@mui/material/Chip'
 
 // service & util functions
 import {utilService} from '../services/util.service.js'
@@ -27,6 +23,12 @@ const MenuProps = {
   },
 }
 
+const validationSchema = Yup.object().shape({
+  txt: Yup.string().max(50, 'Too Long!'),
+  maxPrice: Yup.number().min(0, 'Cannot be negative').nullable(),
+  labels: Yup.array().of(Yup.string()),
+})
+
 function getStyles(label, selectedLabels, theme) {
   return {
     fontWeight: selectedLabels.includes(label) ? theme.typography.fontWeightMedium : theme.typography.fontWeightRegular,
@@ -34,114 +36,142 @@ function getStyles(label, selectedLabels, theme) {
 }
 
 export function ToyFilter({filterBy, onSetFilter}) {
-  const [filterByToEdit, setFilterByToEdit] = useState({...filterBy})
-  onSetFilter = useRef(utilService.debounce(onSetFilter, 300))
-  const toyLabels = toyService.getToyLabels()
-  const theme = useTheme()
-
-  useEffect(() => {
-    onSetFilter.current(filterByToEdit)
-  }, [filterByToEdit])
-
-  function handleChange({target}) {
-    let {value, name: field, type, checked} = target
-    if (type === 'checkbox') value = checked
-    if (type === 'select-multiple') {
-      value = Array.from(target.selectedOptions, (option) => option.value) || []
-    }
-
-    value = type === 'number' ? +value || '' : value
-    setFilterByToEdit((prevFilter) => ({...prevFilter, [field]: value}))
+  const initialValues = {
+    txt: filterBy.txt || '',
+    maxPrice: filterBy.maxPrice || 0,
+    sortBy: filterBy.sortBy || '',
+    labels: filterBy.labels || [],
+    inStock: filterBy.inStock || '',
   }
 
-  function handleLabelChange(event) {
-    const {
-      target: {value},
-    } = event
-    setFilterByToEdit((prevFilter) => ({
-      ...prevFilter,
-      labels: typeof value === 'string' ? value.split(',') : value,
-    }))
+  const toyLabels = toyService.getToyLabels()
+  const theme = useTheme()
+  const onSetFilterDebounced = useRef(utilService.debounce(onSetFilter, 300))
+
+  function handleSubmit(values) {
+    onSetFilterDebounced.current(values)
   }
 
   return (
     <section className="toy-filter full main-layout container">
-      <h2>Toys Filter</h2>
-      <form>
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          id="name"
-          name="txt"
-          placeholder="By name"
-          value={filterByToEdit.txt}
-          onChange={handleChange}
-        />
+      <h2>Filter Our Toys</h2>
+      <Formik 
+      initialValues={initialValues}
+       validationSchema={validationSchema}
+        onSubmit={handleSubmit}>
+        {({values, errors, touched, setFieldValue}) => (
+          <Form>
+            <div className="name-container ">
+              <Field
+                as={TextField}
+                name="txt"
+                label="Name"
+                placeholder="By name"
+                fullWidth
+                variant="outlined"
+                error={touched.txt && !!errors.txt}
+                helperText={touched.txt && errors.txt}
+              />
+            </div>
 
-        <label htmlFor="maxPrice">Max price:</label>
-        <input
-          type="number"
-          id="maxPrice"
-          name="maxPrice"
-          placeholder="By max price"
-          value={filterByToEdit.maxPrice || ''}
-          onChange={handleChange}
-        />
+            <div className="maxPrice-container padding-s">
+              <Field
+                as={TextField}
+                name="maxPrice"
+                type="number"
+                label="Max Price"
+                placeholder="By max price"
+                fullWidth
+                variant="outlined"
+                error={touched.maxPrice && !!errors.maxPrice}
+                helperText={touched.maxPrice && errors.maxPrice}
+              />
+            </div>
 
-        <div className="sort-container container">
-          <label htmlFor="sortBy">Sort By: </label>
-          <select value={filterByToEdit.sortBy || ''} onChange={handleChange} id="sortBy" name="sortBy">
-            <option value="">None</option>
-            <option value="name">Name</option>
-            <option value="price">Price</option>
-            <option value="createdAt">Creation Date</option>
-          </select>
+            <div className="stock-container padding-s">
+              <FormControl fullWidth>
+                <InputLabel id="in-stock-label">Stock Status</InputLabel>
+                <Select
+                  labelId="in-stock-label"
+                  id="inStock"
+                  value={values.inStock || ''}
+                  onChange={(event) => setFieldValue('inStock', event.target.value)}
+                  label="Stock Status"
+                >
+                  <MenuItem value="">All</MenuItem>
+                  <MenuItem value="true">In Stock</MenuItem>
+                  <MenuItem value="false">Not in Stock</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
 
-          <select name="inStock" value={filterByToEdit.inStock || ''} onChange={handleChange}>
-            <option value="">All</option>
-            <option value="true">In Stock</option>
-            <option value="false">Not in stock</option>
-          </select>
+            <div className="sort-container padding-s">
+              <FormControl fullWidth>
+                <InputLabel id="sort-by-label">Sort By</InputLabel>
+                <Select
+                  labelId="sort-by-label"
+                  id="sort-by"
+                  value={values.sortBy?.type || ''}
+                  onChange={(event) => setFieldValue('sortBy.type', event.target.value)}
+                  label="Sort By"
+                >
+                  <MenuItem value="">None</MenuItem>
+                  <MenuItem value="name">Name</MenuItem>
+                  <MenuItem value="price">Price</MenuItem>
+                  <MenuItem value="createdAt">Creation Date</MenuItem>
+                </Select>
+              </FormControl>
+            </div>
 
-          <label htmlFor="sortDescending">Sort Descending:</label>
-          <input
-            type="checkbox"
-            id="sortDescending"
-            name="sortBy.desc"
-            checked={filterByToEdit.sortBy?.desc || false}
-            onChange={handleChange}
-          />
-        </div>
+            <div className="filter-checkbox container">
+              <FormControl fullWidth>
+                <InputLabel id="sort-descending-label">Sort Descending</InputLabel>
+                <Field
+                  type="checkbox"
+                  id="sortDescending"
+                  name="sortBy.desc"
+                  checked={values.sortBy?.desc || false}
+                  onChange={() => setFieldValue('sortBy.desc', !values.sortBy?.desc)}
+                />
+              </FormControl>
+            </div>
 
-        <div className="labels-container container">
-          <FormControl sx={{m: 1, width: 250}}>
-            <InputLabel id="toy-labels-select-label">Labels</InputLabel>
-
-            <Select
-              multiple
-              labelId="toy-labels-select-label"
-              id="toy-labels-select"
-              value={filterByToEdit.labels || []}
-              onChange={handleLabelChange}
-              input={<OutlinedInput id="select-multiple-chip" label="Labels" />}
-              renderValue={(selected) => (
-                <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
-                  {selected.map((value) => (
-                    <Chip key={value} label={value} />
+            <div className="labels-container ">
+              <FormControl sx={{m: 1, width: 250}}>
+                <InputLabel id="toy-labels-select-label">Labels</InputLabel>
+                <Select
+                  multiple
+                  labelId="toy-labels-select-label"
+                  id="toy-labels-select"
+                  value={values.labels}
+                  onChange={(event) => setFieldValue('labels', event.target.value)}
+                  input={<OutlinedInput id="select-multiple-chip" label="Labels" />}
+                  renderValue={(selected) => (
+                    <Box sx={{display: 'flex', flexWrap: 'wrap', gap: 0.5}}>
+                      {selected.map((value) => (
+                        <Chip key={value} label={value} />
+                      ))}
+                    </Box>
+                  )}
+                  MenuProps={MenuProps}
+                >
+                  {toyLabels.map((label) => (
+                    <MenuItem key={label} value={label} style={getStyles(label, values.labels, theme)}>
+                      {label}
+                    </MenuItem>
                   ))}
-                </Box>
-              )}
-              MenuProps={MenuProps}
-            >
-              {toyLabels.map((label) => (
-                <MenuItem key={label} value={label} style={getStyles(label, filterByToEdit.labels || [], theme)}>
-                  {label}
-                </MenuItem>
-              ))}
-            </Select>
-          </FormControl>
-        </div>
-      </form>
+                </Select>
+              </FormControl>
+            </div>
+
+            <div>
+              <Button type="submit" variant="contained" color="primary">
+                Apply Filters
+              </Button>
+            </div>
+          </Form>
+        )}
+      </Formik>
     </section>
   )
 }

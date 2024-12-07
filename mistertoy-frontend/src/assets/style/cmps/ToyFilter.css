@@ -2,3 +2,17 @@
     background-color: var(--clr2bg);
     padding: 1em;
 }
+
+.formik {
+    display: flex;
+    margin: auto;
+    flex-direction: column;
+    width: 60%;
+    align-items: center;
+    gap: 10px;
+
+}
+
+.formik>* {
+    width: 100%;
+}
