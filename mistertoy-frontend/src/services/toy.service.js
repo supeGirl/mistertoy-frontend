@@ -1,18 +1,8 @@
-import { httpService } from './http.service.js'
+import {httpService} from './http.service.js'
 
 const BASE_URL = 'toy/'
 
-const labels = [
-  'On wheels',
-  'Box game',
-  'Art',
-  'Baby',
-  'Doll',
-  'Puzzle',
-  'Outdoor',
-  'Battery Powered',
-]
-
+export const labels = ['On wheels', 'Box game', 'Art', 'Baby', 'Doll', 'Puzzle', 'Outdoor', 'Battery Powered']
 
 export const toyService = {
   query,
@@ -22,44 +12,81 @@ export const toyService = {
   getEmptyToy,
   getDefaultFilter,
   getToyLabels,
+  getNextToyId,
+  addToyMsg,
+  removeToyMsg
 }
 
-function query(filterBy = {}) {
-  return httpService.get(BASE_URL, filterBy)
+async function query(filterBy = {}) {
+  try {
+    const toys = await httpService.get(BASE_URL, filterBy)
+    return toys
+  } catch  {
+    throw new Error('Failed to fetch toys. Please try again.')
+  }
 }
 
-function getById(toyId) {
-  return httpService.get(BASE_URL + toyId)
+async function getById(toyId) {
+  
+  try {
+    const toy = await httpService.get(BASE_URL + toyId)
+    console.log('toy after try fatching from http',toy);
+    
+    
+    if (!toy) throw new Error(`Toy with ID ${toyId} not found`)
+    return toy
+  } catch {
+    throw new Error(`Toy with ID ${toyId} not found`)
+  }
 }
 
-function remove(toyId) {
-  return httpService.delete(BASE_URL + toyId)
+async function getNextToyId(currentToyId) {
+  try {
+    const toys = await query()
+    const currentIndex = toys.findIndex((toy) => toy._id === currentToyId)
+    const nextToy = toys[(currentIndex + 1) % toys.length]
+    return nextToy._id
+  } catch  {
+    throw new Error('Error fetching next toy ID')
+  }
 }
 
-function save(toy) {
-  const method = toy._id ? 'put' : 'post'
-  return httpService[method](BASE_URL, toy)
+async function remove(toyId) {
+  try {
+    await httpService.delete(BASE_URL + toyId)
+  } catch {
+    throw new Error('Failed to delete toy. Please try again.')
+  }
+}
+
+async function save(toy) {
+try{
+  const mathod = toy._id? 'put' : 'post'
+  const savedToy = await httpService[mathod](BASE_URL,toy)
+  return savedToy
+}catch{
+  throw new Error('Failed to save toy. Please try again.');
+
+}
 }
 
 function getDefaultFilter() {
   return {
     txt: '',
-    inStock: null,
+    maxPrice: '',
     labels: [],
+    inStock: '',
     pageIdx: 0,
-    sortBy: {
-      type: '',
-      desc: 1
-    }
+    sortBy: '',
   }
 }
-
 
 function getEmptyToy() {
   return {
     name: '',
     price: '',
-    labels: _getRandomLabels(),
+    labels: '',
+    inStock: true,
   }
 }
 
@@ -67,12 +94,13 @@ function getToyLabels() {
   return [...labels]
 }
 
-function _getRandomLabels() {
-  const labelsCopy = [...labels]
-  const randomLabels = []
-  for (let i = 0; i < 2; i++) {
-    const randomIdx = Math.floor(Math.random() * labelsCopy.length)
-    randomLabels.push(labelsCopy.splice(randomIdx, 1)[0])
-  }
-  return randomLabels
+async function addToyMsg(toyId, txt) {
+  
+  const savedMsg = await httpService.post(`toy/${toyId}/msg`, {txt})
+  return savedMsg
+}
+async function removeToyMsg(toyId, txt) {
+  
+  const savedMsg = await httpService.delete(`toy/${toyId}/msg/${txt}`)
+  return savedMsg
 }

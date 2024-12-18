@@ -8,11 +8,10 @@ export function ToyPreview({toy}) {
         Price: <span>${toy.price.toLocaleString()}</span>
       </p>
       <p>
-        <span className={toy.inStock ? 'instock' : 'not-instock'}>{toy.inStock ? 'In stock' : 'Not in stock'} </span>
       </p>
-      <hr />
-      <Link to={`/toy/edit/${toy._id}`}>Edit</Link> &nbsp; | &nbsp;
       <Link to={`/toy/${toy._id}`}>Details</Link>
+      <hr />
+      <span className={toy.inStock ? 'instock' : 'not-instock'}>{toy.inStock ? 'In stock' : 'Not in stock'} </span>
     </article>
   )
 }

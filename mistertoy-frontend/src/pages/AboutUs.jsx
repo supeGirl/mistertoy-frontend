@@ -14,7 +14,10 @@ export function AboutUs() {
         Visit us to explore our collection and make your kids' dreams come true!
       </p>
       <h3 className="stores-location">Our Locations</h3>
+      <section className="google-map container ">
+
       <GoogleMap />
+      </section>
     </section>
   )
 }
