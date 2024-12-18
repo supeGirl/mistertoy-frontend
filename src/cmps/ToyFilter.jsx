@@ -25,7 +25,6 @@ export function ToyFilter({filterBy, onSetFilter, labels}) {
   }
 
   useEffect(() => {
-    console.log('Sending filterByToEdit:', filterByToEdit) // Check filter state
     onSetFilter.current(filterByToEdit)
   }, [filterByToEdit])
 

@@ -1,6 +1,6 @@
 import {useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
-import {Await, useNavigate} from 'react-router'
+import { useNavigate} from 'react-router'
 import {toyService} from '../services/toy.service.js'
 import {Loader} from '../cmps/Loader.jsx'
 import {userService} from '../services/user.service.js'
@@ -47,7 +47,7 @@ export function ToyDetails() {
           <ul>
             {toy.msgs.map((msg) => (
               <li key={msg.id}>
-                <p>{msg.txt}</p>
+                <pre>{msg.txt}</pre>
                 {(loggedInUser?.isAdmin || loggedInUser?._id === msg.by._id) && (
                   <button onClick={() => handleRemoveComment(msg.id)}>Delete</button>
                 )}
@@ -75,7 +75,7 @@ export function ToyDetails() {
   if (!toy) return <Loader />
   return (
     <section className="toy-details">
-      <Link to={`/toy`}>Back</Link>
+      <Link to={`/toy`} className="back-link">Back</Link>
       &nbsp;
       {loggedInUser?.isAdmin && <Link to={`/toy/edit/${toy._id}`}>Edit</Link>}
       <h1>Toy name : {toy.name}</h1>
