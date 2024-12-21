@@ -158,10 +158,12 @@ mistertoy-frontend/ │ ├── src/ │ ├── components/ │ ├── s
 3. Start the frontend:
    npm ren dev
 
-License
+   ### Technologies Used
+
+- Frontend: React, React Router, Redux (or any state management solution), Axios, SCSS
+- Backend: Node.js, Express, MongoDB, Mongoose
+- Tools: Postman, Git, npm, webpack
+
+### License
+
 This project is licensed under the MIT License - see the LICENSE file for details.
-
-css
-Copy code
-
-This `README.md` file covers the main sections of your project, including setup instructions, features, API endpoints, and usage. You can adjust it based on further requirements or specific details related to your project.
