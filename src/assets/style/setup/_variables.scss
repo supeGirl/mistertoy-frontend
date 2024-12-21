@@ -1,0 +1,26 @@
+// COLOR PALETTE
+$clr1: #789dbc;
+$clr2: darken(#789dbc, 40%);
+$clr3: lighten($clr2,80%);
+
+
+$clr1bg: #89a8b2;
+$clr1bg-light: #b3c8cf;
+$clr2bg: #e5e1da;
+$clr2bg-light: #f1f0e8;
+
+$gray1: rgb(240, 240, 240);
+$gray2: rgb(155, 155, 155);
+$gray3: rgb(44, 44, 44);
+
+// LAYOUT
+$layoutPadding: 20px;
+
+// LAYOUT BREAKPOINTS
+$break-narrow: 1200px;
+$break-normal: 1360px;
+$break-wide: 1920px;
+
+$padded-break-narrow: $break-narrow + $layoutPadding * 2;
+$padded-break-normal: $break-normal + $layoutPadding * 2;
+$padded-break-wide: $break-wide + $layoutPadding * 2;

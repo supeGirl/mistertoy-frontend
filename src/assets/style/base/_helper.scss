@@ -1,0 +1,63 @@
+// Flex
+
+.flex {
+  display: flex;
+}
+
+.flex.flex-column {
+  flex-direction: column;
+}
+
+.flex.justify-center {
+  justify-content: center;
+}
+
+.flex.justify-between {
+  justify-content: space-between;
+}
+
+.flex.align-center {
+  align-items: center;
+}
+
+// List
+.clean-list {
+  list-style-type: none;
+  padding: 0;
+  margin: 0;
+}
+
+// Padding start
+.padding-s {
+  padding-block-start: 10px;
+}
+
+// Text
+.vertical-text {
+  writing-mode: tb-rl;
+  transform: rotate(-180deg);
+}
+
+.tag-text {
+  color: $clr1;
+  text-transform: uppercase;
+  @include type(boldCondensed);
+}
+
+// Aspect ratios
+
+.ratio-16-9 {
+  @include aspect-ratio(100, 56);
+}
+
+.ratio-square {
+  @include aspect-ratio(100, 100);
+}
+
+.ratio-card {
+  @include aspect-ratio(100, 80);
+}
+
+.ratio-poster {
+  @include aspect-ratio(100, 150);
+}

@@ -4,7 +4,7 @@ export function ToyPreview({toy}) {
   return (
     <article>
       <h4>{toy.name}</h4>
-      <p>
+      <p className=' toy-preview toy-price'>
         Price: <span>${toy.price.toLocaleString()}</span>
       </p>
       <p>

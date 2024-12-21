@@ -1,0 +1,23 @@
+// SETUP
+@import '../style/setup/typography';
+@import '../style/setup/variables';
+@import '../style/setup/mixins';
+@import '../style/setup/functions';
+
+// BASICS
+@import '../style/base/base';
+@import '../style/base/helper';
+@import '../style/base/layout';
+
+// COMPONENTS
+@import '../style/cmps/appFooter';
+@import '../style/cmps/appheader';
+@import '../style/cmps/dashboard';
+@import '../style/cmps/loader';
+@import '../style/cmps/shoppingCart';
+@import '../style/cmps/toggleBtn';
+@import '../style/cmps/toyFilter';
+@import '../style/cmps/toyIndex';
+@import '../style/cmps/toyList';
+@import '../style/cmps/toyPrew';
+@import '../style/cmps/userMsg';

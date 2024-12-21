@@ -8,8 +8,8 @@
     "build": "vite build",
     "lint": "eslint .",
     "preview": "vite preview",
-    "sass-dev":"sass --watch --update --style=expanded scss:css",
-    "sass-prod":"sass --no-source-map --style=compressed scss:css"
+    "sass-dev": "sass --watch src/assets/scss:src/assets/css --style=expanded",
+    "sass-prod": "sass --no-source-map --style=compressed src/assets/scss:src/assets/css"
   },
   "dependencies": {
     "@emotion/react": "^11.13.5",
