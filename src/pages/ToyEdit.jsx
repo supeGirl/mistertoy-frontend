@@ -6,9 +6,9 @@ import {toyService} from '../services/toy.service.js'
 
 export function ToyEdit() {
   const navigate = useNavigate()
-  const [toyToEdit, setToyToEdit] = useState(toyService.getEmptyToy())
+  const [toyToEdit, setToyToEdit] = useState(toyService.getEmptyToy(''))
   const {toyId} = useParams()
-//need here async as well?
+
   useEffect(() => {
     if (toyId) loadToy()
   }, [])
@@ -21,12 +21,7 @@ export function ToyEdit() {
       console.log('Had issues in toy edit', err)
       navigate('/toy')
     }
-    // toyService.getById(toyId)
-    //     .then(toy => setToyToEdit(toy))
-    //     .catch(err => {
-    //         console.log('Had issues in toy edit', err)
-    //         navigate('/toy')
-    //     })
+
   }
 
   function handleChange({target}) {
@@ -35,26 +30,18 @@ export function ToyEdit() {
     setToyToEdit((prevToy) => ({...prevToy, [field]: value}))
   }
 
-  function onSaveToy(ev) {
+ async function onSaveToy(ev) {
     ev.preventDefault()
     if (!toyToEdit.price) toyToEdit.price = 1000
     try {
-      saveToy(toyToEdit)
+    await  saveToy(toyToEdit)
       showSuccessMsg('Toy Saved!')
       navigate('/toy')
     } catch (err) {
       console.log('Had issues in toy details', err)
       showErrorMsg('Had issues in toy details')
     }
-    // saveToy(toyToEdit)
-    //   .then(() => {
-    //     showSuccessMsg('Toy Saved!')
-    //     navigate('/toy')
-    //   })
-    //   .catch((err) => {
-    //     console.log('Had issues in toy details', err)
-    //     showErrorMsg('Had issues in toy details')
-    //   })
+
   }
 
   return (

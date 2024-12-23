@@ -12,15 +12,6 @@ export async function login(credentials) {
     console.error('user actions -> Cannot login', err)
     throw err
   }
-  // return userService.login(credentials)
-  //     .then((user) => {
-  //         console.log('user login:', user)
-  //         store.dispatch({ type: SET_USER, user })
-  //     })
-  //     .catch((err) => {
-  //         console.log('user actions -> Cannot login', err)
-  //         throw err
-  //     })
 }
 
 export async function signup(credentials) {
@@ -31,15 +22,6 @@ export async function signup(credentials) {
     console.error('user actions -> Cannot signup', err)
     throw err
   }
-  //   return userService
-  //     .signup(credentials)
-  //     .then((user) => {
-  //       store.dispatch({type: SET_USER, user})
-  //     })
-  //     .catch((err) => {
-  //       console.log('user actions -> Cannot signup', err)
-  //       throw err
-  //     })
 }
 
 export async function logout(credentials) {
@@ -50,14 +32,6 @@ export async function logout(credentials) {
     console.error('user actions -> Cannot logout', err)
     throw err
   }
-  //   return userService
-  //     .logout(credentials)
-  //     .then(() => {
-  //       store.dispatch({type: SET_USER, user: null})
-  //     })
-  //     .catch((err) => {
-  //       console.log('user actions -> Cannot logout', err)
-  //     })
 }
 
 export async function checkout(diff) {
@@ -69,14 +43,4 @@ export async function checkout(diff) {
     console.error('user actions -> Cannot checkout', err)
     throw err
   }
-  //   return userService
-  //     .updateScore(-diff)
-  //     .then((newScore) => {
-  //       store.dispatch({type: CLEAR_CART})
-  //       store.dispatch({type: SET_USER_SCORE, score: newScore})
-  //     })
-  //     .catch((err) => {
-  //       console.log('user actions -> Cannot checkout', err)
-  //       throw err
-  //     })
 }

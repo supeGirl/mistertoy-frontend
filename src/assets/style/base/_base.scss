@@ -21,6 +21,7 @@ html {
 body {
     margin: 0;
     // background-color: $clr2;
+    height: 100vh;
 
     @include for-normal-layout {
         &.sidebar-open {
@@ -105,7 +106,7 @@ p {
 
 // links
 a {
-    color: $clr3;
+    color:$clr2;
 
     &.active {
         background-color: $clr1bg-light;

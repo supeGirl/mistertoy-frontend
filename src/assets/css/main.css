@@ -25,6 +25,7 @@ html {
 
 body {
   margin: 0;
+  height: 100vh;
 }
 @media (min-width: 1360px) {
   body.sidebar-open {
@@ -151,7 +152,7 @@ p {
 }
 
 a {
-  color: white;
+  color: rgb(34.495049505, 53.5445544554, 69.504950495);
 }
 a.active {
   background-color: #b3c8cf;
@@ -493,7 +494,7 @@ footer {
   position: fixed;
   bottom: 0;
   right: 1em;
-  color: white;
+  color: #789dbc;
   border-radius: 2px;
   font-size: 1.1em;
 }

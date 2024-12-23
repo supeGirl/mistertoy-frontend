@@ -29,7 +29,7 @@ const initialState = {
   filterBy: toyService.getDefaultFilter(),
   lastToys: [],
   labels: [],
-  toyMsg: [],
+ 
 }
 
 export function toyReducer(state = initialState, action = {}) {
@@ -63,18 +63,18 @@ export function toyReducer(state = initialState, action = {}) {
       return {...state, labels: action.labels}
 
     //* Toy Msg
-    // case ADD_MSG_TO_TOY:
-    //   return {
-    //     ...state,
-    //     toys: state.toys.map((toy) => (toy._id === action.toyId ? {...toy, msgs: [...toy.msgs, action.msg]} : toy)),
-    //   }
-    // case REMOVE_MSG_FROM_TOY:
-    //   return {
-    //     ...state,
-    //     toys: state.toys.map((toy) =>
-    //       toy._id === action.toyId ? {...toy, msgs: toy.msgs.filter((msg) => msg.id !== action.msgId)} : toy
-    //     ),
-    //   }
+    case ADD_MSG_TO_TOY:
+      return {
+        ...state,
+        toys: state.toys.map((toy) => (toy._id === action.toyId ? {...toy, msgs: [...toy.msgs, action.msg]} : toy)),
+      }
+    case REMOVE_MSG_FROM_TOY:
+      return {
+        ...state,
+        toys: state.toys.map((toy) =>
+          toy._id === action.toyId ? {...toy, msgs: toy.msgs.filter((msg) => msg.id !== action.msgId)} : toy
+        ),
+      }
 
     //* Shopping cart
     case TOGGLE_CART_IS_SHOWN:

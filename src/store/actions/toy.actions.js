@@ -17,7 +17,6 @@ import {store} from '../store.js'
 export async function loadToys() {
   const filterBy = store.getState().toyModule.filterBy
   store.dispatch({type: SET_IS_LOADING, isLoading: true})
-  // store.dispatch({type: SET_TOYS, toys})
 
   try {
     const toys = await toyService.query(filterBy)
@@ -28,17 +27,7 @@ export async function loadToys() {
   } finally {
     store.dispatch({type: SET_IS_LOADING, isLoading: false})
   }
-  // return toyService.query(filterBy)
-  // 	.then(toys => {
-  // 		store.dispatch({ type: SET_TOYS, toys })
-  // 	})
-  // 	.catch(err => {
-  // 		console.log('toy action -> Cannot load toys', err)
-  // 		throw err
-  // 	})
-  // 	.finally(() => {
-  // 		store.dispatch({ type: SET_IS_LOADING, isLoading: false })
-  // 	})
+
 }
 
 export async function removeToy(toyId) {
@@ -46,18 +35,10 @@ export async function removeToy(toyId) {
     await toyService.remove(toyId)
     store.dispatch({type: REMOVE_TOY, toyId})
   } catch (err) {
-    console.log('toy action -> Cannot remove toy', err)
+    console.log('toy action -> Cannot remove toy')
     throw err
   }
-  //   return toyService
-  //     .remove(toyId)
-  //     .then(() => {
-  //       store.dispatch({type: REMOVE_TOY, toyId})
-  //     })
-  //     .catch((err) => {
-  //       console.log('toy action -> Cannot remove toy', err)
-  //       throw err
-  //     })
+
 }
 
 export async function removeToyOptimistic(toyId) {
@@ -68,42 +49,26 @@ export async function removeToyOptimistic(toyId) {
     showSuccessMsg('Removed Toy!')
   } catch (err) {
     store.dispatch({type: TOY_UNDO})
-    console.log('toy action -> Cannot remove toy', err)
+    console.log('toy action -> Cannot remove toy')
     throw err
   }
-  //   return toyService
-  //     .remove(toyId)
-  //     .then(() => {
-  //       showSuccessMsg('Removed Toy!')
-  //     })
-  //     .catch((err) => {
-  //       store.dispatch({type: TOY_UNDO})
-  //       console.log('toy action -> Cannot remove toy', err)
-  //       throw err
-  //     })
+
 }
 
 export async function saveToy(toy) {
   const type = toy._id ? UPDATE_TOY : ADD_TOY
+  
   try {
     const savedToy = await toyService.save(toy)
+    console.log('savedToy', savedToy)
+    
     store.dispatch({type, toy: savedToy})
     return savedToy
   } catch (err) {
-    console.log('toy action -> Cannot save toy', err)
+    console.log('toy action -> Cannot save toy')
     throw err
   }
 
-  //   return toyService
-  //     .save(toy)
-  //     .then((savedToy) => {
-  //       store.dispatch({type, toy: savedToy})
-  //       return savedToy
-  //     })
-  //     .catch((err) => {
-  //       console.log('toy action -> Cannot save toy', err)
-  //       throw err
-  //     })
 }
 
 export function setFilterBy(filterBy = toyService.getDefaultFilter()) {
@@ -114,31 +79,31 @@ export function loadLabels() {
   store.dispatch({type: SET_LABELS, labels})
 }
 
-// export async function addToyMsg(toyId, txt) {
-//   try {
-//     const msg = await toyService.addToyMsg(toyId, txt)
-//     store.dispatch({
-//       type: ADD_MSG_TO_TOY,
-//       toyId,
-//       msg,
-//     })
-//     return msg
-//   } catch (err) {
-//     console.error('Failed to add message', err)
-//     throw err
-//   }
-// }
+export async function addToyMsg(toyId, txt) {
+  try {
+    const msg = await toyService.addToyMsg(toyId, txt)
+    store.dispatch({
+      type: ADD_MSG_TO_TOY,
+      toyId,
+      msg,
+    })
+    return msg
+  } catch (err) {
+    console.error('Failed to add message', err)
+    throw err
+  }
+}
 
-// export async function removeToyMsg(toyId, msgId) {
-//   try {
-//     await toyService.removeToyMsg(toyId, msgId)
-//     store.dispatch({
-//       type: REMOVE_MSG_FROM_TOY,
-//       toyId,
-//       msgId,
-//     })
-//   } catch (err) {
-//     console.error('Failed to remove message', err)
-//     throw err
-//   }
-// }
+export async function removeToyMsg(toyId, msgId) {
+  try {
+    await toyService.removeToyMsg(toyId, msgId)
+    store.dispatch({
+      type: REMOVE_MSG_FROM_TOY,
+      toyId,
+      msgId,
+    })
+  } catch (err) {
+    console.error('Failed to remove message', err)
+    throw err
+  }
+}

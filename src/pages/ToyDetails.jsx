@@ -1,10 +1,11 @@
 import {useEffect, useState} from 'react'
 import {Link, useParams} from 'react-router-dom'
-import { useNavigate} from 'react-router'
+import {useNavigate} from 'react-router'
 import {toyService} from '../services/toy.service.js'
 import {Loader} from '../cmps/Loader.jsx'
 import {userService} from '../services/user.service.js'
 import {CommentForm} from '../cmps/CommentForm.jsx'
+import {CommentsList} from '../cmps/CommentsList.jsx'
 
 export function ToyDetails() {
   const [toy, setToy] = useState(null)
@@ -23,8 +24,6 @@ export function ToyDetails() {
     try {
       const toyData = await toyService.getById(toyId)
       setToy(toyData)
-      // const nextToyId = await toyService.getNextToyId(toyId)
-      // console.log('Next toy ID:', nextToyId)
     } catch (err) {
       console.log('Had issues in toy details', err)
       navigate('/toy')
@@ -38,33 +37,11 @@ export function ToyDetails() {
     return labels.join(', ')
   }
 
-  function renderComments() {
-    if (toy?.msgs && toy.msgs.length > 0) {
-      console.log(toy.msgs)
-      return (
-        <div className="comments-container">
-          <h3>Comments:</h3>
-          <ul>
-            {toy.msgs.map((msg) => (
-              <li key={msg.id}>
-                <pre>{msg.txt}</pre>
-                {(loggedInUser?.isAdmin || loggedInUser?._id === msg.by._id) && (
-                  <button onClick={() => handleRemoveComment(msg.id)}>Delete</button>
-                )}
-              </li>
-            ))}
-          </ul>
-        </div>
-      )
-    } else {
-      return <p>No comments yet on this toy.</p>
-    }
-  }
-
   async function handleComment(comment) {
-    await toyService.addToyMsg(toy._id, comment.txt)
-    loadToy() 
-    setIsAddingComment(false) 
+    const {txt, rating} = comment
+    await toyService.addToyMsg(toy._id, txt, +rating)
+    loadToy()
+    setIsAddingComment(false)
   }
 
   async function handleRemoveComment(msgId) {
@@ -75,7 +52,9 @@ export function ToyDetails() {
   if (!toy) return <Loader />
   return (
     <section className="toy-details">
-      <Link to={`/toy`} className="back-link">Back</Link>
+      <Link to={`/toy`} className="back-link">
+        Back
+      </Link>
       &nbsp;
       {loggedInUser?.isAdmin && <Link to={`/toy/edit/${toy._id}`}>Edit</Link>}
       <h1>Toy name : {toy.name}</h1>
@@ -86,10 +65,26 @@ export function ToyDetails() {
         rem! Nemo quidem, placeat perferendis tempora aspernatur sit, explicabo veritatis corrupti perspiciatis
         repellat, enim quibusdam!
       </p>
-      <h5>Price: ${toy.price}</h5>
-      <button onClick={() => setIsAddingComment(!isAddingComment)}>{isAddingComment ? 'Cancel' : 'Add Comment'}</button>
+      <h5>
+        Price: ${toy.price}{' '}
+      </h5>
+        <span className={toy.inStock ? 'instock' : 'not-instock'}>{toy.inStock ? 'In stock' : 'Not in stock'} </span>
+      {loggedInUser ? (
+        <button className="toy-add-comments-btn btn" onClick={() => setIsAddingComment(!isAddingComment)}>
+          {isAddingComment ? 'Cancel' : 'Add Comment'}
+        </button>
+      ) : (
+        <p>
+          Only signed-in users can add comments.{' '}
+          <Link to="/login" className="comment-login-link">
+            login or signup
+          </Link>{' '}
+          to join the discussion!
+        </p>
+      )}
       {isAddingComment && <CommentForm onSubmit={handleComment} />}
-      {renderComments()}
+      {/* {renderComments()} */}
+      <CommentsList comments={toy?.msgs} loggedInUser={loggedInUser} onRemoveComment={handleRemoveComment} />
     </section>
   )
 }

@@ -20,8 +20,7 @@ export function ToyFilter({filterBy, onSetFilter, labels}) {
   const defaultValues = {
     txt: '',
     maxPrice: 0,
-    inStock: false,
-    sortBy: '',
+    inStock: '',
   }
 
   useEffect(() => {
@@ -37,10 +36,15 @@ export function ToyFilter({filterBy, onSetFilter, labels}) {
       else if (value === 'no') value = false
       else value = '' 
     }
+    if (field === 'sortBy') {
+      value = typeof value === 'string' ? value : '';
+    }
 
     value = type === 'number' ? +value : value
 
     setFilterByToEdit((prevFilter) => ({...prevFilter, [field]: value}))
+    console.log(filterByToEdit);
+
   }
 
   return (
@@ -95,7 +99,7 @@ export function ToyFilter({filterBy, onSetFilter, labels}) {
             </div>
 
             <div className="sort-container padding-s">
-              <FormControl fullWidth>
+              <FormControl fullWidth r>
                 <InputLabel id="sort-by-label">Sort By</InputLabel>
                 <Select
                   labelId="sort-by-label"
